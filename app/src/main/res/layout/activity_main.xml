@@ -10,7 +10,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
+        android:layout_marginTop="96dp"
         android:text="RSA暗号を試す"
         android:textSize="30dp"
         android:textStyle="bold"
@@ -22,7 +22,7 @@
         android:id="@+id/encryptionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="32dp"
         android:text="暗号化をする"
         app:layout_constraintBottom_toTopOf="@+id/decryptionButton"
         app:layout_constraintEnd_toEndOf="parent"
@@ -42,8 +42,8 @@
         android:id="@+id/whatIs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:text="rsa暗号とは？"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -52,10 +52,43 @@
         android:id="@+id/reset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
         android:text="鍵を作り直す"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <MultiAutoCompleteTextView
+        android:id="@+id/textPublicKey"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text=""
+        android:textSize="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/copy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/copy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:text="コピー"
+        app:layout_constraintBottom_toTopOf="@+id/encryptionButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/titlePublicKey"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="・公開鍵"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/textPublicKey"
+        app:layout_constraintStart_toStartOf="@+id/textPublicKey" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
