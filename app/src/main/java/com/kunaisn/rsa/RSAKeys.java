@@ -2,7 +2,6 @@ package com.kunaisn.rsa;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,13 +18,15 @@ class RSAKeys {
     private BigInteger d = new BigInteger("-1");
     private int strLen;
 
-
+    // 鍵長を指定して鍵を生成
     RSAKeys(int keyLen) {
         this.keyLen = keyLen;
         charLen = this.keyLen / 4;
         strLen = (int)(this.keyLen/16 * (0.5 + 0.25 + 0.125 + 0.0625));
         createKeys();
     }
+
+    // 内部ストレージから鍵を復元
     RSAKeys(Context context) throws FileNotFoundException {
         try {
             File file = new File(context.getFilesDir(), "keys.txt");
@@ -41,24 +42,20 @@ class RSAKeys {
         }
     }
 
+    // 入力された文字列から、公開鍵だけのインスタンスを生成
     RSAKeys(String str) {
-        Log.d("log", "コンストラクタ");
         try {
             String data = "";
             for(int i=0, counter = 0; i<str.length(); i++) {
                 if(str.charAt(i) == '&') {
-                    Log.d("log", "" + counter);
                     switch(counter) {
                         case 0:
-                            Log.d("log", data);
                             this.keyLen = Integer.parseInt(data);
                             break;
                         case 1:
-                            Log.d("log", data);
                             this.n = hexToDec(data);
                             break;
                         case 2:
-                            Log.d("log", data);
                             this.e = hexToDec(data);
                             break;
                         default:
@@ -74,7 +71,6 @@ class RSAKeys {
             this.charLen = this.keyLen / 4;
             strLen = (int)(this.keyLen/16 * (0.5 + 0.25 + 0.125 + 0.0625));
         } catch(Exception e) {
-            Log.d("log", "例外");
             throw e;
         }
     }
@@ -137,10 +133,7 @@ class RSAKeys {
         return decToHex(n);
     }
     String getEHex() {
-        return decToHex(e);
-    }
-    String getDHex() {
-        return decToHex(d);
+        return decToHexHalf(e);
     }
     String getKeyLen() {
         return "" + keyLen;
@@ -157,6 +150,18 @@ class RSAKeys {
         BigInteger f = new BigInteger(0xf + "");
         String str = "";
         while(str.length() < charLen) {
+            BigInteger letter = b.and(f);
+            str = Integer.toHexString(letter.intValue()) + str;
+            b = b.shiftRight(4);
+        }
+        return str;
+    }
+
+    String decToHexHalf(BigInteger b) {
+        BigInteger f = new BigInteger(0xf + "");
+        String str = "";
+        int charLenHalf = charLen / 2;
+        while(str.length() < charLenHalf) {
             BigInteger letter = b.and(f);
             str = Integer.toHexString(letter.intValue()) + str;
             b = b.shiftRight(4);
@@ -197,11 +202,35 @@ class RSAKeys {
             }
             // 暗号文の文章化は4ビットずつ行う。
             BigInteger result = bitText.modPow(e, n);
-            Log.d("log", decToHex(result));
             encryptStr += decToHex(result);
         }
-        Log.d("log", encryptStr);
         return encryptStr;
+    }
+
+    // 秘密鍵を使用して復号する
+    String rsaDecryption(String str) {
+        String decryptStr = "";
+        int blocks = (str.length()-1) / charLen + 1;
+        for(int i=0; i<blocks; i++) {
+            String block;
+            try {
+                block = str.substring(i*charLen, (i + 1)*charLen);
+            } catch(Exception e) {
+                block = str.substring(i*charLen, str.length());
+            }
+            BigInteger bitText = hexToDec(block);
+            BigInteger result = bitText.modPow(d, n);
+            BigInteger f4 = new BigInteger(0xffff + "");
+            String tmpStr = "";
+            for(int j=0; j<strLen; j++) {
+                int[] ary = new int[1];
+                ary[0] = result.and(f4).intValue();
+                result = result.shiftRight(16);
+                tmpStr = new String(ary, 0, 1) + tmpStr;
+            }
+            decryptStr = tmpStr;
+        }
+        return decryptStr;
     }
 
 }

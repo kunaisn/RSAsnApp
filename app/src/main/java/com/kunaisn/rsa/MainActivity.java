@@ -10,11 +10,8 @@ import android.view.View;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.File;
-import java.math.BigInteger;
-import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -31,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ((Button)findViewById(R.id.decryptionButton)).setOnClickListener(this);
         ((Button)findViewById(R.id.encryptionButton)).setOnClickListener(this);
 
-        MultiAutoCompleteTextView pubKeyText = findViewById(R.id.textPublicKey);
+        TextView pubKeyText = findViewById(R.id.textPublicKey);
 
         Context context = getApplicationContext();
         try {
@@ -50,7 +47,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (view.getId()) {
             case (R.id.encryptionButton):
-                intentKeys = new Intent(this, Encypt.class);
+                intentKeys = new Intent(this, Encrypt.class);
+                startActivity(intentKeys);
+                break;
+            case (R.id.decryptionButton):
+                intentKeys = new Intent(this, Decrypt.class);
                 startActivity(intentKeys);
                 break;
             case (R.id.reset):

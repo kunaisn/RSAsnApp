@@ -16,13 +16,10 @@ import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.PrintWriter;
-
-public class Encypt extends AppCompatActivity implements View.OnClickListener {
+public class Encrypt extends AppCompatActivity implements View.OnClickListener {
 
     String secretText;
-    MultiAutoCompleteTextView secretTextView;
+    EditText secretTextView;
     EditText pubKey;
     EditText planeText;
     TextView error;
@@ -31,8 +28,6 @@ public class Encypt extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_encypt);
-
-        Log.d("log", "暗号化ウィンドウ");
 
         ((Button)findViewById(R.id.copy)).setOnClickListener(this);
         ((Button)findViewById(R.id.back)).setOnClickListener(this);
@@ -71,7 +66,7 @@ public class Encypt extends AppCompatActivity implements View.OnClickListener {
                     RSAKeys rsakeys = new RSAKeys(tmp);
                     tmp = String.valueOf(planeText.getText());
                     secretText = rsakeys.rsaEncryption(tmp);
-                    secretTextView.setText(secretText);
+                    secretTextView.setText(secretText.substring(0, 20) + "......(省略)");
 
                 } catch(Exception e) {
                     error.setText("……ん、あれ、おかしいな？……");
